@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #td{
+            border: 1px;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" th:href="@{'/css/bootstrap.css'}">
+</head>
+<body>
+  <div class="container mt-3">
+    <table class="table table-striped" style="border: 1px">
+        <thead>
+            <tr>
+                <td>Id</td>
+                <td>Name</td>
+                <td>Description</td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="film: ${films}">
+                <td th:text="${film.id}"></td>
+                <td th:text="${film.name}"></td>
+                <td th:text="${film.description}"></td>
+                <td>
+                    <form th:action="@{'/details/'+${film.id}}">
+                    <button type="submit" class="btn btn-success">Watch</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+  </div>
+</body>
+</html>

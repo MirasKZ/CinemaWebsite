@@ -1,0 +1,211 @@
+<html lang="en"
+
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="layout/main.html">
+
+<div layout:fragment="secondFragment" style="">
+    <div class="container" style="color:black;background-color:white;min-height: 800px;padding-top:10px;">
+        <div class="row mt-2">
+                <p  style="font-size:30px;background-color: blueviolet " class="text-center" th:text="${ses.film.name}"></p>
+        </div>
+        <div class="row mt-2">
+            <div class="col-8 mx-auto   ">
+                <img th:src="${ses.film.imgUrl}" style="width: 800px;height: 500px;border-radius: 10px;">
+            </div>
+        </div>
+        <div class="row mt-1">
+            <h4>Описание</h4>
+        </div>
+        <div class="row mt-1">
+            <p th:text="${ses.film.description}"></p>
+        </div>
+        <hr style="color: black;">
+
+
+        <div class="row mt-2">
+        <h4>Инфо по сеансу:</h4>
+        </div>
+        <div class="row mt-2">
+            <div class="col-4">
+                <h5>Время</h5>
+                <p style="background-color: #3dd5f3;font-size: 30px;" th:text="${#temporals.format(ses.localDateTime,'hh:mm dd.mm.yyyy')}"></p>
+            </div>
+            <div class="col-4">
+                <h5>Имя фильма</h5>
+                <p th:text="${ses.film.name}" style="background-color: #3dd5f3;font-size: 30px;"></p>
+            </div>
+            <div class="col-4">
+                 <h5>Кинотеатр</h5>
+                <p th:text="${ses.cinema.name}" style="background-color: #3dd5f3;font-size: 30px;"></p>
+            </div>
+        </div>
+
+        <hr style="color: black;">
+        <form th:action="@{'/buyTicket'}" method="post">
+            <input type="hidden" name="session_id" th:value="${ses.id}">
+            <input type="hidden" name="user_id" th:value="${#authentication.principal.id}">
+        <div class="row mt-2">
+            <div class="col-4" style="padding-left: 40px;padding-right: 40px;">
+                <h4>Выберите место:</h4>
+                <div class="row">
+                    <div class="col">
+                        <div class="row mt-2">
+                            <label>Ряд</label>
+                        </div>
+                        <div class="row mt-2">
+                            <select class="form-select"  name="row_number">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col" style="margin-left: 10px">
+                        <div class="row mt-2">
+                            <label>Колонка:</label>
+                        </div>
+                        <div class="row mt-2">
+                            <select class="form-select" name="col_number">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <label>Тип - цена</label>
+                </div>
+
+                <div class="row mt-2">
+                    <select class="form-select" name="price_number">
+                        <option value="1">Взрослый - <span th:text="${ses.adultPrice}"></span>KZT</option>
+                        <option value="2">Студент - <span th:text="${ses.studentPrice}"></span>KZT</option>
+                        <option value="3">Детский - <span th:text="${ses.childPrice}"></span>KZT</option>
+                    </select>
+                </div>
+                <div class="row mt-3">
+                    <button type="submit" class="btn btn-success">Купить билет</button>
+                </div>
+
+            </div>
+            <div class="col-8" id="seatsDiv" style="padding-left: 80px;padding-right: 80px;"></div>
+        </div>
+        </form>
+    </div>
+
+
+
+
+<script type="text/javascript">
+    loadSessionSeats();
+
+    function  loadTickets(){
+        //get rest
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function (){
+            if(this.status == 200){
+
+            }
+        }
+        xmlHttp.open("GET","/news",true);
+        xmlHttp.send();
+    }
+
+    function loadSessionSeats(){
+
+        //let tickets  = getTickets();
+        var htmlCode="";
+
+        htmlCode+="<div class='row'>";
+
+        htmlCode+="<span class='text-center'><span style='color: red'>красная</span>  - занятый, " +
+            "<span style='color: green'>зеленый</span> - свободный</span>";
+
+        htmlCode+="</div>";
+        htmlCode+="<div class='row mt-2'>";
+        htmlCode+="<table class='table'>";
+        htmlCode+="<tbody>";
+        htmlCode+="<tr>";
+        htmlCode+="<td></td>";
+        htmlCode+="<td>";
+        htmlCode+="<span style='font-weight: bold'>Кол. </span>";
+        htmlCode+="<span style='font-weight: bold'>"+1+"</span>";
+        htmlCode+="</td>";
+        htmlCode+="<td>";
+        htmlCode+="<span style='font-weight: bold'>Кол. </span>";
+        htmlCode+="<span style='font-weight: bold'>"+2+"</span>";
+        htmlCode+="</td>";
+        htmlCode+="<td>";
+        htmlCode+="<span style='font-weight: bold'>Кол. </span>";
+        htmlCode+="<span style='font-weight: bold'>"+3+"</span>";
+        htmlCode+="</td>";
+        htmlCode+="<td>";
+        htmlCode+="<span style='font-weight: bold'>Кол. </span>";
+        htmlCode+="<span style='font-weight: bold'>"+4+"</span>";
+        htmlCode+="</td>";
+        htmlCode+="<td>";
+        htmlCode+="<span style='font-weight: bold'>Кол. </span>";
+        htmlCode+="<span style='font-weight: bold'>"+5+"</span>";
+        htmlCode+="</td>";
+
+        htmlCode+="</tr>";
+        for(let i=0; i<8; i++) {
+            htmlCode += "<tr>";
+            htmlCode+="<td>";
+            htmlCode+="<span style='font-weight: bold'>Ряд </span>";
+            htmlCode+="<span style='font-weight: bold'>"+(i+1)+"</span>";
+            htmlCode+="</td>";
+            for (let j = 0; j < 5; j++){
+                htmlCode += "<td>";
+
+
+                htmlCode+="<button type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target=''#staticBackdrop'>";
+                htmlCode+="<i style='color: green' class='fa-solid fa-chair'></i>";
+                htmlCode+="</button>";
+                htmlCode += "</td>"
+            }
+            htmlCode += "</tr>";
+        }
+        htmlCode+="</tbody>";
+        htmlCode+="</table>";
+        htmlCode+="</div>";
+        let divok = document.getElementById('seatsDiv');
+        divok.innerHTML=htmlCode;
+    }
+</script>
+
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Understood</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</html>
+
+

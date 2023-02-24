@@ -1,0 +1,183 @@
+<html lang="en"
+
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="layout/main.html">
+
+<div layout:fragment="secondFragment" style="">
+    <div class="container" style="color:black;background-color:white;min-height: 800px;padding-top:10px;">
+        <div class="row mt-2">
+
+            <div class="col-4">
+                <h2 style="background-color: #3dd5f3"  class="text-center" th:text="${film.name}"><i class="fa-regular fa-user"></i></h2>
+            </div>
+            <div class="col-8">
+                <img th:src="${film.imgUrl}" style="width: 800px;height: 500px;border-radius: 10px;">
+            </div>
+
+        </div>
+        <div class="row mt-1">
+            <h4>Описание</h4>
+        </div>
+        <div class="row mt-1">
+            <p th:text="${film.description}"></p>
+        </div>
+        <hr style="color: black;">
+
+
+        <div class="row">
+            <table class="table ">
+                <thead style="background-color: peru">
+                <tr>
+                    <td>Время</td>
+                    <td>Кинотеатр</td>
+                    <td>Взрослый</td>
+                    <td>Студенческий</td>
+                    <td>Детский</td>
+                    <td style="width: 10%;"></td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr style="margin:30px;" th:each="ses:${sessions}">
+
+
+
+                    <td ><strong th:text="${#temporals.format(ses.localDateTime,'HH:mm dd.MM.yyyy ') }"></strong></td>
+
+
+
+                    <td th:text="${ses.cinema.name}"></td>
+                    <td th:text="${ses.adultPrice}"></td>
+                    <td th:text="${ses.studentPrice}"></td>
+                    <td th:text="${ses.childPrice}"></td>
+                    <td><!--                        //seans id-->
+                        <a class="btn btn-primary" th:href="@{'/seansy/'+${ses.id}}">Buy</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+
+            <script type="text/javascript">
+                function openDeleteModal(id) {
+                    var myModal = new bootstrap.Modal(document.getElementById("deleteCategory"), {});
+                    myModal.show();
+                    loadSeats();
+                }
+
+                function loadSeats() {
+                }
+
+            </script>
+            <div class="modal fade" id="deleteCategory" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                 aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="container">
+                            <form th:action="@{'/delete-category'}" method="post">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5">CONFIRM DELETE</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="row">
+                                                <div class="col-9 mx-auto">
+                                                    <div class="container">
+                                                        <div class="row mx-auto">
+                                                            <i class="fa-solid fa-display text-center"
+                                                               style="font-size: 100px;"></i>
+                                                        </div>
+                                                        <div class="row" id="seats">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">NO</button>
+                                    <button type="submit" class="btn btn-danger">YES</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2 mb-2" sec:authorize="hasAnyRole('ROLE_ADMIN')">
+            <!-- Button trigger modal -->
+            <div class="col">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addSessionBackdrop">
+                Add session
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="addSessionBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <form th:action="@{'/addsession'}" method="post">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="addSession">Modal title</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="film_id" th:value="${film.id}">
+                            <div class="row mt-1">
+                                <label>Выберите кинотеатр:</label>
+                            </div>
+                            <div class="row">
+                                <select name="cinema_id" class="form-select">
+                                    <option th:each="cin:${cinemas}" th:text="${cin.name}" th:value="${cin.id}"></option>
+                                </select>
+                            </div>
+                            <div class="row mt-1">
+                                <label>Дата и время:</label>
+                            </div>
+                            <div class="row mt-1">
+                                <input type="datetime-local" name="datetime" class="form-control">
+                            </div>
+
+                            <div class="row mt-1">
+                                <label>Взрослый:</label>
+                            </div>
+                            <div class="row mt-1">
+                                <input type="number" name="adult_price" class="form-control">
+                            </div>
+                            <div class="row mt-1">
+                                <label>Студенческий:</label>
+                            </div>
+                            <div class="row mt-1">
+                                <input type="number" name="student_price" class="form-control">
+                            </div>
+                            <div class="row mt-1">
+                                <label>Детский:</label>
+                            </div>
+                            <div class="row mt-1">
+                                <input type="number" name="child_price" class="form-control">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Add Session</button>
+                        </div>
+                    </div>
+                </div>
+                </form>
+            </div>
+
+        </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+</html>

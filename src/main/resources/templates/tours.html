@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{'/css/bootstrap.css'}">
+    <title>Title</title>
+</head>
+<body>
+    <div class="container">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <td>Id</td>
+            <td>Name</td>
+            <td>Characteristics</td>
+            <td>Price in KZT</td>
+        </tr>
+        </thead>
+        <tbody th:each="tour:${tours}" >
+                <tr th:each="price: ${tour.prices}">
+                    <td th:text="${tour.id}"></td>
+                    <td th:text="${tour.name}"></td>
+                    <td th:text="${price.description}"></td>
+                    <td th:text="${price.price}"></td>
+                </tr>
+        </tbody>
+    </table>
+    <div class="row mt-1">
+        <form th:action="@{'/addTour'}" method="post">
+            <div class="row">
+                <label>Tour name</label>
+            </div>
+            <div class="row">
+                <input type="text" name="name" class="form-control">
+            </div>
+            <div class="row">
+                <label>Tour description</label>
+            </div>
+            <div class="row">
+                <input type="text" name="description" class="form-control">
+            </div>
+            <div class="row">
+                <label>Tour price</label>
+            </div>
+            <div class="row">
+                <input type="text" name="price" class="form-control">
+            </div>
+
+            <button type="submit" class="btn btn-success"> Add Tour</button>
+        </form>
+    </div>
+    </div>
+</body>
+</html>

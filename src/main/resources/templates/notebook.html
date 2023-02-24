@@ -1,0 +1,37 @@
+
+
+
+   ///////     Authenticated navbar
+
+   <div class="profile-container" style="margin-right: 10px;margin-left: 950px;" sec:authorize="hasAnyRole('ROLE_ADMIN')">
+     <img class="profile-picture" style="margin-right: 5px;" src="img/profile.jpg" alt="">
+     <div class="dropdown" >
+       <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+               th:text="${#authentication.principal.fullName}">
+       </button>
+       <ul class="dropdown-menu">
+         <li><a class="dropdown-item" href="#">Cabinet</a></li>
+         <li><a class="dropdown-item" th:href="@{'/exit'}">Sign out</a></li>
+         <li><a class="dropdown-item" href="#">Caret</a></li>
+       </ul>
+     </div>
+     <div class="toggle" style="margin-left: 10px;">
+       <i class="fas fa-moon toggle-icon"></i>
+       <i class="fas fa-sun toggle-icon"></i>
+       <div class="toggle-ball"></div>
+     </div>
+   </div>
+
+
+
+
+   ///////Anonymous navbar
+
+   <div class="profile-container" style="margin-right: 10px;margin-left: 1150px;" sec:authorize="isAnonymous()">
+     <li class="menu-list-item"><a th:href="@{'/signin'}" > <i class="left-menu-icon fas fa-user"></i></a></li>
+     <div class="toggle">
+       <i class="fas fa-moon toggle-icon"></i>
+       <i class="fas fa-sun toggle-icon"></i>
+       <div class="toggle-ball"></div>
+     </div>
+   </div>
